@@ -1,16 +1,57 @@
 import sys
-
+import pandas as pd
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    """
+
+    :param messages_filepath: file of twitter messages
+    :param categories_filepath: file of
+    :return:
+    """
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = messages.merge(categories, on='id')
+    return df
 
 
 def clean_data(df):
-    pass
+    """
+
+    :param df:
+    :return:
+    """
+    categories = df['categories'].str.split(';', expand=True)
+    row = categories[:1]
+    category_colnames = row.apply(lambda x: x.str.split('-')[0][0], axis=0)
+    categories.columns = category_colnames
+
+    # convert category values to just numbers 0 or 1
+    for column in categories:
+        categories[column] = categories[column].apply(lambda x: x.split('-')[1] if int(x.split('-')[1]) < 2 else 1)
+        categories[column] = categories[column].astype(int)
+
+    # drop the original categories column from `df`
+    df.drop('categories', axis=1, inplace=True)
+
+    # concatenate the original dataframe with the new `categories` dataframe
+    df = pd.concat([df, categories], axis=1)
+
+    # drop duplicates
+    df = df.drop_duplicates(keep='first')
+
+    return df
 
 
 def save_data(df, database_filename):
-    pass  
+    """
+
+    :param df:
+    :param database_filename:
+    :return:
+    """
+    engine = create_engine('sqlite:///' + database_filename)
+    df.to_sql('cleanData', engine, index=False)
 
 
 def main():
