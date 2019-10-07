@@ -11,6 +11,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import LinearSVC
 # For Model Evaluation
 from sklearn.metrics import classification_report, accuracy_score
 # For Saving
@@ -22,13 +24,14 @@ def load_data(database_filepath):
     :param database_filepath:
     :return:
     """
-    engine = create_engine('sqlite:///' + database_filepath)
-    df = pd.read_sql_query('SELECT * FROM cleanData', engine)
+    engine = create_engine('sqlite:///{}'.format(database_filepath))
+    df = pd.read_sql_table('cleanData', con=engine)
+    # Read messages as X
+    X = df['message']
+    # Read categories as Y
+    Y = df.drop(['id', 'message', 'original', 'genre'], axis=1)
 
-    X = df['message'].values
-    y = df.drop(['id', 'message', 'original', 'genre'], axis=1)
-    category_names = y.columns
-    return X, y, category_names
+    return X, Y, Y.columns
 
 
 def tokenize(text):
@@ -50,22 +53,27 @@ def tokenize(text):
 
 def build_model():
     """
+    Setup the pipeline and model
 
-    :return:
+    :return: instance of GridSearchCV model
     """
-    pipeline = Pipeline([
-        ('vect', CountVectorizer(tokenizer=tokenize)),
-        ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(RandomForestClassifier()))
-    ])
+    # Creating the pipeline
+    pipeline = Pipeline([('vect', CountVectorizer(tokenizer=tokenize)),
+                         ('tfidf', TfidfTransformer()),
+                         ('clf', MultiOutputClassifier(
+                             OneVsRestClassifier(LinearSVC())))])
 
-    parameters = {
-        'vect__ngram_range': ((1, 1), (1, 2)),
-        'clf__estimator__min_samples_split': [2, 4],
-    }
+    # Parameter grid
+    parameters = {'vect__ngram_range': ((1, 1), (1, 2)),
+                  'vect__max_df': (0.75, 1.0)
+                  }
 
-    cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2, n_jobs=4)
-    return cv
+    # Create the model
+    model = GridSearchCV(estimator=pipeline,
+                         param_grid=parameters,
+                         verbose=3,
+                         cv=3)
+    return model
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
