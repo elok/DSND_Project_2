@@ -20,9 +20,10 @@ import pickle
 
 def load_data(database_filepath):
     """
+    Given the database filepath, load the engine, and divide the data into X and Y
 
-    :param database_filepath:
-    :return:
+    :param database_filepath: database filepath
+    :return: X, Y, and categories
     """
     engine = create_engine('sqlite:///{}'.format(database_filepath))
     df = pd.read_sql_table('cleanData', con=engine)
@@ -36,15 +37,20 @@ def load_data(database_filepath):
 
 def tokenize(text):
     """
+    Given a text, tokenize, lemmatize, normalize, and remove leading and trailing white space
 
     :param text:
     :return:
     """
+    # tokenize text
     tokens = word_tokenize(text)
+    # initiate lemmatizer
     lemmatizer = WordNetLemmatizer()
 
+    # iterate through each token
     clean_tokens = []
     for tok in tokens:
+        # lemmatize, normailize, and remove leading and trailing white space
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
         clean_tokens.append(clean_tok)
 

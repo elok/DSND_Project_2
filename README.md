@@ -1,5 +1,29 @@
 # Disaster Response Pipeline Project
 
+## Udacity Data Scientist Nanodegree
+
+### Project Overview
+
+In this project, I apply my skills to analyze disaster data from Figure Eight to build a model for an API that classifies disaster messages. The project includes a web app where an emergency worker can input a new message and get classification results in several categories.   
+
+### Project Components
+
+#### 1. ETL Pipeline
+* Loads teh messages and categories datasets
+* Merges the two datasets
+* Cleans the data
+* Stores the results in a SQLite databse
+#### 2. ML Pipeline
+* Loads data from the SQLite database
+* Splits the dataset into training and test sets
+* Builds a text processing and machine learning pipeline
+* Trains and tunes a model using GridSearchCV
+* Outputs results on the test set
+* Exports the final model as a pickle file
+#### 3. Flask Web App
+* A flask web application where an emergency worker can input a new message and get classification results in several categories. 
+* Provides data visualizations using Plotly
+
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
 

@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     """
+    Given the filepath to messages and categories,
 
     :param messages_filepath: file of twitter messages
     :param categories_filepath: file of
@@ -81,7 +82,4 @@ def main():
 
 
 if __name__ == '__main__':
-    """
-    python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/database.sqlite
-    """
     main()
