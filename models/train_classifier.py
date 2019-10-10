@@ -10,7 +10,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.ensemble import RandomForestClassifier
+# from sklearn.ensemble import RandomForestClassifier
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import LinearSVC
 # For Model Evaluation
@@ -67,7 +67,7 @@ def build_model():
     pipeline = Pipeline([('vect', CountVectorizer(tokenizer=tokenize)),
                          ('tfidf', TfidfTransformer()),
                          ('clf', MultiOutputClassifier(
-                             OneVsRestClassifier(LinearSVC())))])
+                                OneVsRestClassifier(LinearSVC())))])
 
     # Parameter grid
     parameters = {'vect__ngram_range': ((1, 1), (1, 2)),
