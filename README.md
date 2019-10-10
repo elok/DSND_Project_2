@@ -9,7 +9,7 @@ In this project, I apply my skills to analyze disaster data from Figure Eight to
 ### Project Components
 
 #### 1. ETL Pipeline
-* Loads teh messages and categories datasets
+* Loads the messages and categories datasets
 * Merges the two datasets
 * Cleans the data
 * Stores the results in a SQLite databse
@@ -23,6 +23,19 @@ In this project, I apply my skills to analyze disaster data from Figure Eight to
 #### 3. Flask Web App
 * A flask web application where an emergency worker can input a new message and get classification results in several categories. 
 * Provides data visualizations using Plotly
+
+### Files:
+* /app/templates/go.html - web page that handles user query and displays model results
+* /app/templates/master.html - index webpage displays cool visuals and receives user input text for model
+* /app/run.py - flask application
+* /data/disaster_categories.csv - categories dataset
+* /data/disaster_messages.csv - messages dataset
+* /data/DisasterResponse.db - SQLite database container the merged dataset
+* /data/process_data.csv - data cleaning ETL pipeline that merges the two dataset above
+* /models/classifier.pkl - classifier model as a pickle file
+* /models/train_classifier.py - machine learning pipeline that builds the classifier model above
+* /dsnd.yml - anaconda environment used to run this code
+* /README.md - github readme file
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
